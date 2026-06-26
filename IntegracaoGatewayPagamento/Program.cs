@@ -3,12 +3,22 @@ using IntegracaoGatewayPagamento.Repositories.Interfaces;
 using IntegracaoGatewayPagamento.Services;
 using IntegracaoGatewayPagamento.Services.Interface;
 using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IMainRepository, MainRepository>();
 builder.Services.AddScoped<IMainService, MainService>();
+builder.Services.AddHttpClient<IMainService, MainService>(client =>
+{
+    var baseUrl = Environment.GetEnvironmentVariable("ASAAS_BASEURL") 
+                  ?? throw new InvalidOperationException("ASAAS_BASEURL não definida no .env");
+    
+    client.BaseAddress = new Uri(baseUrl);
+    
+    client.DefaultRequestHeaders.Add("access_token", Environment.GetEnvironmentVariable("ASAAS_APIKEY"));
+    
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("Integracao Gateway");
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

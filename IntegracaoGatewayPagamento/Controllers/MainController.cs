@@ -18,13 +18,13 @@ namespace IntegracaoGatewayPagamento.Controllers
         [HttpPost("cadastrarCliente")]
         public async Task<IActionResult> cadastrarCliente([FromBody] ClienteDTO cliente)
         {
-            //CADASTRAR CLIENTE LOCALMENTE
-            var cadastroLocal = await _mainService.CadastrarLocal(cliente);
-            if (cadastroLocal == null) return BadRequest("Não foi possível cadastrar o cliente localmente.");
-            
             //CADASTRAR CLIENTE NO ASAAS
             var cadastroAsaas = await _mainService.CadastrarAsaas(cliente);
             if (cadastroAsaas == null) return BadRequest("Não foi possível cadastrar o cliente no ASAAS.");
+            
+            //CADASTRAR CLIENTE LOCALMENTE
+            var cadastroLocal = await _mainService.CadastrarLocal(cliente);
+            if (cadastroLocal == null) return BadRequest("Não foi possível cadastrar o cliente localmente.");
             
             return Ok($"Cliente {cadastroLocal.name} cadastrado com sucesso!");
         }
