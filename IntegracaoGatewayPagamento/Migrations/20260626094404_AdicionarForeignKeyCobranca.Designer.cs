@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IntegracaoGatewayPagamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260626094404_AdicionarForeignKeyCobranca")]
+    partial class AdicionarForeignKeyCobranca
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,9 +63,6 @@ namespace IntegracaoGatewayPagamento.Migrations
                     b.Property<Guid>("idCliente")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("idProduto")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("invoiceUrl")
                         .IsRequired()
                         .HasColumnType("text");
@@ -79,8 +79,6 @@ namespace IntegracaoGatewayPagamento.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("idCliente");
-
-                    b.HasIndex("idProduto");
 
                     b.ToTable("Cobrancas");
                 });
@@ -111,15 +109,7 @@ namespace IntegracaoGatewayPagamento.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IntegracaoGatewayPagamento.DTO.Produto", "produto")
-                        .WithMany()
-                        .HasForeignKey("idProduto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("cliente");
-
-                    b.Navigation("produto");
                 });
 #pragma warning restore 612, 618
         }

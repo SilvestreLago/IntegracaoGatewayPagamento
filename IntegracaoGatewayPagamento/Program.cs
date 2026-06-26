@@ -6,9 +6,24 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IMainRepository, MainRepository>();
-builder.Services.AddScoped<IMainService, MainService>();
-builder.Services.AddHttpClient<IMainService, MainService>(client =>
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<ICobrancaRepository, CobrancaRepository>();
+builder.Services.AddScoped<ICobrancaService, CobrancaService>();
+builder.Services.AddHttpClient<IClienteService, ClienteService>(client =>
+{
+    var baseUrl = Environment.GetEnvironmentVariable("ASAAS_BASEURL") 
+                  ?? throw new InvalidOperationException("ASAAS_BASEURL não definida no .env");
+    
+    client.BaseAddress = new Uri(baseUrl);
+    
+    client.DefaultRequestHeaders.Add("access_token", Environment.GetEnvironmentVariable("ASAAS_APIKEY"));
+    
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("Integracao Gateway");
+});
+builder.Services.AddHttpClient<ICobrancaService, CobrancaService>(client =>
 {
     var baseUrl = Environment.GetEnvironmentVariable("ASAAS_BASEURL") 
                   ?? throw new InvalidOperationException("ASAAS_BASEURL não definida no .env");
@@ -40,7 +55,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//HABILITAR O SWAGGER
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
