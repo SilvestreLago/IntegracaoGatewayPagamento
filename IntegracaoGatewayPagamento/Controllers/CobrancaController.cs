@@ -29,5 +29,21 @@ namespace IntegracaoGatewayPagamento.Controllers
             //RETORNA O LINK DA COBRANCA
             return Ok($"Link da cobranca: {cobranca}");
         }
+        
+        //CADASTRAR PAGAMENTO - MANIPULAÇÃO DE PREÇO [FIX]
+        [HttpPost("manipulacaoPrecoFix")]
+        public async Task<IActionResult> manipulacaoPrecoFix([FromBody] CobrancaInputFixDTO cobrancaInputFix)
+        {
+            //VERIFICAR A EXISTÊNCIA DO CLIENTE
+            var clienteCadastrado = await _cobrancaService.VerificarCliente(cobrancaInputFix.idCliente);
+            if (clienteCadastrado == null)  return BadRequest($"Cliente não possui cadastro.");
+            
+            //CRIAR COBRANÇA NO ASAAS
+            var cobranca = await _cobrancaService.CriarCobrancaFix(cobrancaInputFix, clienteCadastrado.Id, clienteCadastrado.Customer);
+            if (cobranca == null) return BadRequest($"Não foi possível gerar a cobrança no ASAAS.");
+            
+            //RETORNA O LINK DA COBRANCA
+            return Ok($"Link da cobranca: {cobranca}");
+        }
     }
 }
