@@ -29,6 +29,21 @@ namespace IntegracaoGatewayPagamento.Repositories
             }
         }
         
+        //BUSCAR VALOR DO PRODUTO NO BANCO DE DADOS
+        public async Task<double?> BuscarValorProduto(Guid idProduto)
+        {
+            try
+            {
+                var prod = _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
+                return prod.Result.Preco;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
     }
     
 }
