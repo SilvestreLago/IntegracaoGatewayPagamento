@@ -7,6 +7,8 @@ namespace IntegracaoGatewayPagamento.Services.Interface
         Task<Cliente?> VerificarCliente(Guid idCliente); //VERIFICAR EXISTENCIA DO CLIENTE
         Task<string> CriarCobranca(CobrancaInputDTO cobrancaInput, Guid IdCliente, string customer); //CADASTRAR PAGAMENTO - MANIPULAÇÃO DE PREÇO
         Task<string> CriarCobrancaFix(CobrancaInputFixDTO cobrancaInput, Guid IdCliente, string customer); //CADASTRAR PAGAMENTO - MANIPULAÇÃO DE PREÇO [FIX]
+        Task<Cobranca?> VerificarCobranca(String idAsaas); //VERIFICAR EXISTENCIA DA COBRANCA
+        Task<Cobranca?> UpdateCobranca(Cobranca cobranca); //ATUALIZAR INFORMAÇÕES DA COBRANCA
     }
     
 }
