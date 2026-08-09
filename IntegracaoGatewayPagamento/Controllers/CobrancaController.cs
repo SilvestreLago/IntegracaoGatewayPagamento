@@ -45,5 +45,39 @@ namespace IntegracaoGatewayPagamento.Controllers
             //RETORNA O LINK DA COBRANCA
             return Ok($"Link da cobranca: {cobranca}");
         }
+        
+        //ADICIONAR DATA DE PAGAMENTO - VALIDAÇÃO DE WEBHOOK
+        [HttpPost("webhook")]
+        public async Task<IActionResult> Webhook([FromBody] WebhookDTO req)
+        {
+            //VERIFICAR A EXISTÊNCIA DA COBRANCA
+            var cobranca = await _cobrancaService.VerificarCobranca(req.payment.id);
+            if (cobranca == null) return BadRequest($"Cobrança não encontrada.");
+            
+            //ADICIONAR DATA DE PAGAMENTO
+            cobranca.paymentDate = DateOnly.FromDateTime(DateTime.Now);
+            _cobrancaService.UpdateCobranca(cobranca);
+            
+            return Ok("Pagamento atualizado com sucesso.");
+        }
+        
+        //ADICIONAR DATA DE PAGAMENTO[FIX] - VALIDAÇÃO DE WEBHOOK
+        [HttpPost("webhookFix")]
+        public async Task<IActionResult> WebhookFix([FromHeader (Name = "asaas-access-token")] string? token, [FromBody] WebhookDTO req)
+        {
+            //VERIFICA SE O TOKEN É VALIDO
+            var _asaasToken = Environment.GetEnvironmentVariable("ASAAS_TOKEN");
+            if(string.IsNullOrEmpty(token) || token != _asaasToken) return Unauthorized("Token de acesso inválido.");
+            
+            //VERIFICAR A EXISTÊNCIA DA COBRANCA
+            var cobranca = await _cobrancaService.VerificarCobranca(req.payment.id);
+            if (cobranca == null) return BadRequest($"Cobrança não encontrada.");
+            
+            //ADICIONAR DATA DE PAGAMENTO
+            cobranca.paymentDate = DateOnly.FromDateTime(DateTime.Now);
+            _cobrancaService.UpdateCobranca(cobranca);
+            
+            return Ok("Pagamento atualizado com sucesso.");
+        }
     }
 }

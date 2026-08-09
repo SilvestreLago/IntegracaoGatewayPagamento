@@ -65,6 +65,7 @@ namespace IntegracaoGatewayPagamento.Services
                 id = new Guid(),
                 idCliente = IdCliente,
                 idProduto = cobrancaInput.idProduto,
+                idAsaas = resposta.id,
                 value = cobrancaInput.value,
                 quantidade = cobrancaInput.quantidade,
                 billingType = cobrancaInput.billingType,
@@ -126,6 +127,7 @@ namespace IntegracaoGatewayPagamento.Services
                 id = new Guid(),
                 idCliente = IdCliente,
                 idProduto = cobrancaInput.idProduto,
+                idAsaas = resposta.id,
                 value = valorFinal,
                 quantidade = cobrancaInput.quantidade,
                 billingType = cobrancaInput.billingType,
@@ -138,6 +140,26 @@ namespace IntegracaoGatewayPagamento.Services
             var cobrancaBanco = await _cobrancaRepository.SalvarCobranca(cobrancaAsaas);
 
             return cobrancaBanco;
+        }
+        
+        //VERIFICAR EXISTENCIA DA COBRANCA
+        public async Task<Cobranca?> VerificarCobranca(String idAsaas)
+        {
+            //BUSCAR NO BANCO DE DADOS
+            var verificar = await _cobrancaRepository.VerificarCobranca(idAsaas);
+            if (verificar != null) return verificar; 
+            return null;
+        }
+        
+        //ATUALIZAR INFORMAÇÕES DA COBRANCA
+        public async Task<Cobranca?> UpdateCobranca(Cobranca cobranca)
+        {
+            //ALTERAR DATA DE PAGAMENTO
+            cobranca.paymentDate = DateOnly.FromDateTime(DateTime.Now);
+            
+            //SALVAR NO BANCO
+            var updateBanco = await _cobrancaRepository.UpdateCobrancaWebhook(cobranca);
+            return updateBanco;
         }
     }
 }

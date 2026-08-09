@@ -44,6 +44,35 @@ namespace IntegracaoGatewayPagamento.Repositories
             }
         }
         
+        //VERIFICAR A EXISTENCIA DO IDASAAS NO BANCO DE DADOS
+        public async Task<Cobranca?> VerificarCobranca(String idAsaas)
+        {
+            try
+            {
+                //BUSCANDO BASEADO NO ID DA COBRANCA
+                return await _context.Cobrancas.FirstOrDefaultAsync(c => c.idAsaas == idAsaas);
+            }
+            catch (Exception e)
+            {
+                throw new InternalServerErrorException("Erro ao verificar a existencia da cobranca", e);
+            }
+        }
+        
+        //SALVAR INFORMAÇÕES NO BANCO DE DADOS
+        public async Task<Cobranca?> UpdateCobrancaWebhook(Cobranca cobranca)
+        {
+            try
+            {
+                //SALVAR NO BANCO
+                await _context.SaveChangesAsync();
+                return cobranca;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
     
 }

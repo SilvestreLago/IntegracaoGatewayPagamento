@@ -7,6 +7,7 @@ public class Cobranca
     public Guid id { get; set; }
     public Guid idCliente { get; set; }
     public Guid idProduto { get; set; }
+    public String idAsaas { get; set; }
     public required int quantidade { get; set; }
     public required double value { get; set; }
     public required string billingType { get; set; }
