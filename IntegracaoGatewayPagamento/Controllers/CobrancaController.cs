@@ -69,13 +69,17 @@ namespace IntegracaoGatewayPagamento.Controllers
             var _asaasToken = Environment.GetEnvironmentVariable("ASAAS_TOKEN");
             if(string.IsNullOrEmpty(token) || token != _asaasToken) return Unauthorized("Token de acesso inválido.");
             
+            //VALIDAR IDEMPOTÊNCIA
+            var idempotencia = await _cobrancaService.AdicionarWebhook(req.id);
+            if (idempotencia == null) return Conflict($"O evento já está sendo processado.");
+            if (idempotencia.status == "CONCLUIDO") return Ok($"O evento já foi processado.");
+            
             //VERIFICAR A EXISTÊNCIA DA COBRANCA
-            var cobranca = await _cobrancaService.VerificarCobranca(req.payment.id);
+            var cobranca = await _cobrancaService.VerificarCobrancaFix(req.payment.id, idempotencia);
             if (cobranca == null) return BadRequest($"Cobrança não encontrada.");
             
-            //ADICIONAR DATA DE PAGAMENTO
-            cobranca.paymentDate = DateOnly.FromDateTime(DateTime.Now);
-            _cobrancaService.UpdateCobranca(cobranca);
+            //ADICIONAR DATA DE PAGAMENTO E ALTERAR STATUS PARA CONCLUIDO
+            await _cobrancaService.UpdateDados(cobranca, idempotencia);
             
             return Ok("Pagamento atualizado com sucesso.");
         }

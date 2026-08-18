@@ -15,8 +15,8 @@ namespace IntegracaoGatewayPagamento.Controllers
         }
         
         //CADASTRAR PRODUTO
-        [HttpPost("manipulacaoPrecosQuantidade")]
-        public async Task<IActionResult> manipulacaoPrecoQuantidade([FromBody] ProdutoDTO produto)
+        [HttpPost("cadastrarProduto")]
+        public async Task<IActionResult> cadastrarProduto([FromBody] ProdutoDTO produto)
         {
             //CADASTRAR PRODUTO
             var cadastroLocal = await _produtoService.CadastrarProduto(produto);

@@ -73,6 +73,68 @@ namespace IntegracaoGatewayPagamento.Repositories
                 throw;
             }
         }
+        
+        //ADICIONAR IDEMPOTENCIA DO WEBHOOK
+        public async Task<Webhook?> AdicionarWebhook(Webhook webhook)
+        {
+            try
+            {
+                //SALVAR NO BANCO
+                _context.Add(webhook);
+                await _context.SaveChangesAsync();
+                return webhook;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Erro ao salvar o webhook", e);
+                return null;
+            }
+        }
+
+        //ADICIONAR DATA DE PAGAMENTO E ALTERAR STATUS PARA CONCLUIDO
+        public async Task<Webhook?> UpdateDados(Cobranca cobranca, Webhook webhook)
+        {
+            try
+            {
+                //SALVAR NO BANCO
+                _context.Update(cobranca);
+                _context.Update(webhook);
+                await _context.SaveChangesAsync();
+                return webhook;
+            }
+            catch (Exception e)
+            {
+                throw new InternalServerErrorException("Erro ao salvar os status", e);
+            }
+        }
+
+        //REMOVER O REGISTRO DO WEBHOOK
+        public async Task<Boolean?> DeleteWebhook(Webhook idempotencia)
+        {
+            try
+            {
+                _context.Webhooks.Remove(idempotencia);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new InternalServerErrorException("Erro ao remover o registro do webhook", e);
+            }
+        }
+
+        //VERIFICAR O STATUS DO WEBHOOK
+        public async Task<Webhook?> VerificarWebhook(String idEventAsaas)
+        {
+            try
+            {
+                return await _context.Webhooks.FirstOrDefaultAsync(c => c.idEventAsaas == idEventAsaas);
+            }
+            catch (Exception e)
+            {
+                throw new InternalServerErrorException("Erro ao buscar o registro do webhook", e);
+            }
+        }
     }
     
 }

@@ -12,4 +12,5 @@ public class AppDbContext : DbContext
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Produto> Produtos { get; set; }
     public DbSet<Cobranca> Cobrancas { get; set; }
+    public DbSet<Webhook>  Webhooks { get; set; }
 }
