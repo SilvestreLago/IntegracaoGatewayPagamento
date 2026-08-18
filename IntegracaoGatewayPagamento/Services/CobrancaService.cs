@@ -151,6 +151,18 @@ namespace IntegracaoGatewayPagamento.Services
             return null;
         }
         
+        //VERIFICAR EXISTENCIA DA COBRANCA
+        public async Task<Cobranca?> VerificarCobrancaFix(String idAsaas, Webhook idempotencia)
+        {
+            //BUSCAR NO BANCO DE DADOS
+            var verificar = await _cobrancaRepository.VerificarCobranca(idAsaas);
+            if (verificar != null) return verificar;
+            
+            //REMOVER O REGISTRO DO WEBHOOK
+            await _cobrancaRepository.DeleteWebhook(idempotencia);
+            return null;
+        }
+        
         //ATUALIZAR INFORMAÇÕES DA COBRANCA
         public async Task<Cobranca?> UpdateCobranca(Cobranca cobranca)
         {
@@ -160,6 +172,40 @@ namespace IntegracaoGatewayPagamento.Services
             //SALVAR NO BANCO
             var updateBanco = await _cobrancaRepository.UpdateCobrancaWebhook(cobranca);
             return updateBanco;
+        }
+        
+        //ADICIONAR IDEMPOTENCIA DO WEBHOOK
+        public async Task<Webhook?> AdicionarWebhook(string idEventAsaas)
+        {
+            //CRIAR WEBHOOK
+            var webhook = new Webhook
+            {
+                id = new Guid(),
+                idEventAsaas = idEventAsaas,
+                status = "PENDENTE"
+            };
+            
+            //ADICIONAR O IDEVENTASAAS NO BANCO
+            var addBanco = await _cobrancaRepository.AdicionarWebhook(webhook);
+            if (addBanco != null) return addBanco;
+            
+            //BUSCA O STATUS DA IDEMPOTENCIA QUE JÁ ESTÁ NO BANCO
+            var buscaIdempotencia = await _cobrancaRepository.VerificarWebhook(idEventAsaas);
+            if (buscaIdempotencia.status == "PENDENTE") return null;
+            return buscaIdempotencia;
+        }
+
+        //ADICIONAR DATA DE PAGAMENTO E ALTERAR STATUS PARA CONCLUIDO
+        public async Task<Boolean> UpdateDados(Cobranca cobranca, Webhook idempotencia)
+        {
+            //ATUALIZANDO OS STATUS
+            cobranca.paymentDate = DateOnly.FromDateTime(DateTime.Now);
+            idempotencia.status = "CONCLUIDO";
+            
+            //SALVANDO NO BANCO
+            await _cobrancaRepository.UpdateDados(cobranca, idempotencia);
+            
+            return true;
         }
     }
 }
