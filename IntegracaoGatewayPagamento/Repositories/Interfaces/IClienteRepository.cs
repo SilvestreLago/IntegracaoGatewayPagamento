@@ -6,6 +6,7 @@ namespace IntegracaoGatewayPagamento.Repositories.Interfaces
     {
         Task<ClienteDTO> CadastrarCliente(Cliente cliente); //SALVAR CLIENTE NO BANCO DE DADOS
         Task<Cliente?> VerificarCadastro(string cpfCnpj); //VERIFICAR EXISTENCIA DO CLIENTE
+        Task<List<Cliente?>> BuscarClientes();
     }
     
 }

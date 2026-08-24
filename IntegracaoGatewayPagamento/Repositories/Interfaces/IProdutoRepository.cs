@@ -6,6 +6,7 @@ namespace IntegracaoGatewayPagamento.Repositories.Interfaces
     {
         Task<Produto?> CadastrarProduto(Produto produto); //SALVAR PRODUTO NO BANCO DE DADOS
         Task<double?> BuscarValorProduto(Guid idProduto); //BUSCAR O VALOR DE UM PRODUTO NO BANCO DE DADOS
+        Task<List<Produto?>> BuscarProdutos();
     }
     
 }

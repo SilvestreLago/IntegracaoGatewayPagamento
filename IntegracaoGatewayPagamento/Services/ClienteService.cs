@@ -78,6 +78,16 @@ namespace IntegracaoGatewayPagamento.Services
             var verificar = _clienteRepository.VerificarCadastro(cpfCnpj);
             return verificar;
         }
+        
+        //BUSCAR CLIENTES
+        public async Task<List<Cliente?>> BuscarClientes()
+        {
+            //BUSCAR CLIENTES
+            var clientes = await _clienteRepository.BuscarClientes();
+            if (clientes == null) return null;
+
+            return clientes;
+        }
     }
     
 }

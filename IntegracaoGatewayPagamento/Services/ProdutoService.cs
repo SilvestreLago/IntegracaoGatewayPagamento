@@ -36,6 +36,16 @@ namespace IntegracaoGatewayPagamento.Services
             return produtoCadastro;
             
         }
+        
+        //BUSCAR PRODUTOS
+        public async Task<List<Produto?>> BuscarProdutos()
+        {
+            //BUSCAR PRODUTOS
+            var produtos = await _produtoRepository.BuscarProdutos();
+            if (produtos == null) return null;
+            
+            return produtos;
+        }
     }
     
 }

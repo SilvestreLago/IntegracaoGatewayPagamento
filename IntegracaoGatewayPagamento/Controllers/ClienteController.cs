@@ -32,5 +32,16 @@ namespace IntegracaoGatewayPagamento.Controllers
             
             return Ok($"Cliente {cadastroLocal.name} cadastrado com sucesso!");
         }
+        
+        //PEGAR CLIENTE
+        [HttpGet("buscarClientes")]
+        public async Task<IActionResult> buscarClientes()
+        {
+            //BUSCAR CLIENTES
+            var clientes = await _clienteService.BuscarClientes();
+            if (clientes == null) return BadRequest("Não foi possível buscar os clientes.");
+            
+            return Ok(clientes);
+        }
     }
 }

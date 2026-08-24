@@ -83,5 +83,16 @@ namespace IntegracaoGatewayPagamento.Controllers
             
             return Ok("Pagamento atualizado com sucesso.");
         }
+        
+        //BUSCAR COBRANÇAS
+        [HttpGet("buscarCobrancas")]
+        public async Task<IActionResult> buscarCobrancas()
+        {
+            //BUSCAR COBRANCAS
+            var cobrancas = await _cobrancaService.BuscarCobrancas();
+            if (cobrancas == null) return BadRequest("Não foi possível buscar as cobranças.");
+            
+            return Ok(cobrancas);
+        }
     }
 }
