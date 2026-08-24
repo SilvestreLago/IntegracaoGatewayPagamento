@@ -12,6 +12,7 @@ namespace IntegracaoGatewayPagamento.Services.Interface
         Task<Cobranca?> UpdateCobranca(Cobranca cobranca); //ATUALIZAR INFORMAÇÕES DA COBRANCA
         Task<Webhook?> AdicionarWebhook(String idEventAsaas); //ADICIONAR IDEMPOTENCIA DO WEBHOOK
         Task<Boolean> UpdateDados(Cobranca cobranca, Webhook idempotencia); //ADICIONAR DATA DE PAGAMENTO E ALTERAR STATUS PARA CONCLUIDO
+        Task<List<CobrancaViewDTO?>> BuscarCobrancas(); //BUSCAR COBRANCAS
     }
     
 }

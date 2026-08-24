@@ -7,6 +7,7 @@ namespace IntegracaoGatewayPagamento.Services.Interface
         Task<Cliente?> VerificarCadastro(string cpfCnpj); //VERIFICAR EXISTENCIA DE CADASTRO
         Task<ClienteDTO?> CadastrarLocal(Cliente cliente); //CADASTRAR CLIENTE LOCALMENTE
         Task<Cliente?> CadastrarAsaas(ClienteDTO cliente); //CADASTRAR CLIENTE NO ASAAS
+        Task<List<Cliente?>> BuscarClientes(); //BUSCAR CLIENTES
     }
     
 }

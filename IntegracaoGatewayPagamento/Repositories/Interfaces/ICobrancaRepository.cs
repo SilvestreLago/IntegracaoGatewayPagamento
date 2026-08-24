@@ -12,6 +12,7 @@ namespace IntegracaoGatewayPagamento.Repositories.Interfaces
         Task<Webhook?> UpdateDados(Cobranca cobranca, Webhook webhook); //ADICIONAR DATA DE PAGAMENTO E ALTERAR STATUS PARA CONCLUIDO
         Task<Boolean?> DeleteWebhook(Webhook idempotencia); //REMOVER O REGISTRO DO WEBHOOK
         Task<Webhook?> VerificarWebhook(String idEventAsaas); //VERIFICAR O STATUS DO WEBHOOK
+        Task<List<CobrancaViewDTO>> BuscarCobrancas();
     }
     
 }

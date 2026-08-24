@@ -49,6 +49,22 @@ namespace IntegracaoGatewayPagamento.Repositories
             }
         }
         
+        //BUSCAR CLIENTES
+        public async Task<List<Cliente>> BuscarClientes()
+        {
+            try
+            {
+                //BUSCANDO TODOS OS CLIENTES
+                var clientes = _context.Clientes.ToList();
+                return clientes;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
     }
     
 }

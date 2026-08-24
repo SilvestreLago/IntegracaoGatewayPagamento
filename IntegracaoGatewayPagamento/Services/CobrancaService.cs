@@ -207,5 +207,14 @@ namespace IntegracaoGatewayPagamento.Services
             
             return true;
         }
+        
+        //BUSCAR COBRANCAS
+        public async Task<List<CobrancaViewDTO?>> BuscarCobrancas()
+        {
+            //BUSCAR COBRANCAS
+            var cobrancas = await _cobrancaRepository.BuscarCobrancas();
+            
+            return cobrancas;
+        }
     }
 }

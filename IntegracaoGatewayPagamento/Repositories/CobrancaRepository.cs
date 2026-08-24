@@ -135,6 +135,32 @@ namespace IntegracaoGatewayPagamento.Repositories
                 throw new InternalServerErrorException("Erro ao buscar o registro do webhook", e);
             }
         }
+        
+        //BUSCAR COBRANCAS
+        public async Task<List<CobrancaViewDTO>> BuscarCobrancas()
+        {
+            try
+            {
+                return await _context.Cobrancas
+                    .AsNoTracking()
+                    .OrderBy(c => c.dueDate)
+                    .Select(c => new CobrancaViewDTO(
+                        c.cliente.Name,
+                        c.produto.Nome,
+                        c.value,
+                        c.quantidade,
+                        c.paymentDate,
+                        c.dueDate,
+                        c.invoiceUrl
+                        ))
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
     
 }

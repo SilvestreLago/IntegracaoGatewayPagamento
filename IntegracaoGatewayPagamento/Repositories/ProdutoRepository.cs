@@ -44,6 +44,21 @@ namespace IntegracaoGatewayPagamento.Repositories
             }
         }
         
+        //BUSCAR PRODUTOS
+        public async Task<List<Produto>> BuscarProdutos()
+        {
+            try
+            {
+                var prod = _context.Produtos.ToList();
+                return prod;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
     }
     
 }
